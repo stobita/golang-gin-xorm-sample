@@ -1,8 +1,9 @@
 package models
 
 type User struct {
-	ID   int    `xorm:"'id'"`
-	Name string `xorm:"'name'"`
+	ID       int    `xorm:"'id'"`
+	Name     string `xorm:"'name'"`
+	Password string `xorm:"'password'"`
 }
 
 func (u User) GetAll() *[]User {
@@ -20,11 +21,18 @@ func (u User) GetByID(id int) *User {
 	return nil
 }
 
-func (u User) Insert(name string) *User {
-	user := User{Name: name}
-	_, err := engine.Insert(&user)
+func (u User) GetByName() *User {
+	has, _ := engine.Get(&u)
+	if has {
+		return &u
+	}
+	return nil
+}
+
+func (u User) Insert() *User {
+	_, err := engine.Insert(&u)
 	if err == nil {
-		return &user
+		return &u
 	}
 	return nil
 }
